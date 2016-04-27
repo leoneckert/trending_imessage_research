@@ -1,3 +1,4 @@
+
 from subprocess import Popen, PIPE
 def os_system(command):
     process = Popen(command, stdout=PIPE, shell=True)
@@ -59,7 +60,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 					if word not in all_data[sectionCount]:
 						all_data[sectionCount][word] = 0
 					all_data[sectionCount][word] += 1
-					if first_section is True:
+					if first_section is True and blacklist_limit is not 0:
 						blacklist[word] = 0
 					elif loop_count < blacklist_limit:   #makes sense?
 						if word not in blacklist:
@@ -100,6 +101,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 			print "-"*20
 
 		loop_count += 1
+	print blacklist
 	
 	for segment in all_data:
 		ordered_tally = orderTally(all_data[segment])
@@ -124,4 +126,11 @@ def trendingwords(num_days, num_words, blacklist_limit):
 # 	(the higher, the more words end up on the black list
 
 
-trendingwords(20, 2, 1)
+trendingwords(20, 2, 0)
+
+
+
+
+
+
+
