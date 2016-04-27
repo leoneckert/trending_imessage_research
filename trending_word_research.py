@@ -126,7 +126,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 # 	(the higher, the more words end up on the black list
 
 
-trendingwords(20, 2, 0)
+trendingwords(20, 2, 1)
 
 
 
