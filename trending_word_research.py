@@ -61,13 +61,17 @@ def trendingwords(num_days, num_words, blacklist_limit):
 						all_data[sectionCount][word] = 0
 					all_data[sectionCount][word] += 1
 					if first_section is True and blacklist_limit is not 0:
+						# print "added loop " + str(loop_count)
 						blacklist[word] = 0
 					elif loop_count < blacklist_limit:   #makes sense?
 						if word not in blacklist:
+							# print "added loop " + str(loop_count)
 							blacklist[word] = 0
 
 
 			elif int(time) - currentTime > interval:
+				loop_count += 1
+				# print blacklist
 				first_section = False
 				to_delete = list()
 				for black_word in blacklist:
@@ -100,7 +104,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 			print elems
 			print "-"*20
 
-		loop_count += 1
+		
 	
 	for segment in all_data:
 		ordered_tally = orderTally(all_data[segment])
@@ -126,7 +130,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 #	if it's 0, then the blacklist will be empty)
 
 
-trendingwords(20, 2, 1)
+trendingwords(2, 5, 150)
 
 
 
