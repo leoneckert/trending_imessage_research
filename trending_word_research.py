@@ -123,6 +123,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 # third argument: blacklisting parameter modifies how often 
 # 	a word has to not appear in order to get off the blacklist 
 # 	(the higher, the more words end up on the black list
+#	if it's 0, then the blacklist will be empty)
 
 
 trendingwords(20, 2, 1)
