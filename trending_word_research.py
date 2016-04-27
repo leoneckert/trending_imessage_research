@@ -1,5 +1,20 @@
 
+num_days = 30 # amount of days of one time segment
+num_words_to_print = 5 # amount of words printed out per time segment
+black_list_parameter = 7 # *
+# * modifies how often a word has to not appear in a segment in order to 
+#	get off the blacklist (the higher, the more words end up 
+#	on the black list if it's 0, then the blacklist will be empty)
+
+
+
+
+
+
+
+
 from subprocess import Popen, PIPE
+from datetime import datetime
 def os_system(command):
     process = Popen(command, stdout=PIPE, shell=True)
     while True:
@@ -18,6 +33,9 @@ def orderTally(tally):
 		output.append(tempList)	
 	return output
 
+def returnDatetime(mac_timestamp):
+	return str(datetime.fromtimestamp(int(mac_timestamp) + 978307205))
+
 def trendingwords(num_days, num_words, blacklist_limit):
 	first = True
 	all_data = dict()
@@ -29,6 +47,8 @@ def trendingwords(num_days, num_words, blacklist_limit):
 	blacklist = dict()
 
 	loop_count = 0
+
+	date_by_section_count = dict()
 	for line in os_system('sqlite3 ~/Library/Messages/chat.db "select handle_id, is_from_me, date, text from message"'):
 
 		line = line.strip()
@@ -51,9 +71,12 @@ def trendingwords(num_days, num_words, blacklist_limit):
 				# print msgs.returnDatetime(time)
 				currentTime = int(time)
 				all_data[sectionCount] = dict()
+
+				date_by_section_count[sectionCount] = returnDatetime(time)[:10]
 			first = False
 
 			words = text.split()
+
 
 			if int(time) - currentTime <= interval:
 				for word in words:
@@ -68,10 +91,10 @@ def trendingwords(num_days, num_words, blacklist_limit):
 							# print "added loop " + str(loop_count)
 							blacklist[word] = 0
 
+			
 
 			elif int(time) - currentTime > interval:
 				loop_count += 1
-				# print blacklist
 				first_section = False
 				to_delete = list()
 				for black_word in blacklist:
@@ -85,6 +108,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 				sectionCount += 1
 				col_words = dict()
 				all_data[sectionCount] = dict()
+				date_by_section_count[sectionCount] = returnDatetime(time)[:10]
 				for word in words:
 					if word not in all_data[sectionCount]:
 						all_data[sectionCount][word] = 0
@@ -104,11 +128,11 @@ def trendingwords(num_days, num_words, blacklist_limit):
 			print elems
 			print "-"*20
 
-		
+	print "\nSettings:\n\tlength of each segment: " + str(num_days) + " days\n\tblacklist parameter: " + str(black_list_parameter) + "\n\n-----\n"
 	
 	for segment in all_data:
 		ordered_tally = orderTally(all_data[segment])
-		print str(segment) + ". " + str(num_days) + " days:"
+		print str(segment + 1) + ". Segment (" + str(date_by_section_count[segment]) + "):"
 		
 		if len(ordered_tally) <= num_words:
 			for word, tally in ordered_tally:
@@ -122,15 +146,8 @@ def trendingwords(num_days, num_words, blacklist_limit):
 					print "\t", word, tally
 					c += 1
 
-# first argument: amount of days of one time segment
-# second argument: amount of words printed out per time segment
-# third argument: blacklisting parameter modifies how often 
-# 	a word has to not appear in order to get off the blacklist 
-# 	(the higher, the more words end up on the black list
-#	if it's 0, then the blacklist will be empty)
 
-
-trendingwords(30, 5, 29)
+trendingwords(num_days, num_words_to_print, black_list_parameter)
 
 
 
