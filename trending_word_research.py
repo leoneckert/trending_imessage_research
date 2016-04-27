@@ -26,6 +26,8 @@ def trendingwords(num_days, num_words, blacklist_limit):
 
 	first_section = True	
 	blacklist = dict()
+
+	loop_count = 0
 	for line in os_system('sqlite3 ~/Library/Messages/chat.db "select handle_id, is_from_me, date, text from message"'):
 
 		line = line.strip()
@@ -59,6 +61,10 @@ def trendingwords(num_days, num_words, blacklist_limit):
 					all_data[sectionCount][word] += 1
 					if first_section is True:
 						blacklist[word] = 0
+					elif loop_count < blacklist_limit:   #makes sense?
+						if word not in blacklist:
+							blacklist[word] = 0
+
 
 			elif int(time) - currentTime > interval:
 				first_section = False
@@ -79,6 +85,8 @@ def trendingwords(num_days, num_words, blacklist_limit):
 						all_data[sectionCount][word] = 0
 					all_data[sectionCount][word] += 1
 
+
+
 		elif len(elems) == 1: #that means there was only text because the text message was printed in several lines
 			text = elems[0]
 			words = text.split()
@@ -91,6 +99,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 			print elems
 			print "-"*20
 
+		loop_count += 1
 	
 	for segment in all_data:
 		ordered_tally = orderTally(all_data[segment])
@@ -115,4 +124,4 @@ def trendingwords(num_days, num_words, blacklist_limit):
 # 	(the higher, the more words end up on the black list
 
 
-trendingwords(30, 5, 2)
+trendingwords(20, 2, 1)
