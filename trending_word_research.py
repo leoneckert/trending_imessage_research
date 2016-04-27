@@ -101,7 +101,6 @@ def trendingwords(num_days, num_words, blacklist_limit):
 			print "-"*20
 
 		loop_count += 1
-	print blacklist
 	
 	for segment in all_data:
 		ordered_tally = orderTally(all_data[segment])
