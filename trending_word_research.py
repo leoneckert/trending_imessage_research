@@ -108,5 +108,11 @@ def trendingwords(num_days, num_words, blacklist_limit):
 					print "\t", word, tally
 					c += 1
 
+# first argument: amount of days of one time segment
+# second argument: amount of words printed out per time segment
+# third argument: blacklisting parameter modifies how often 
+# 	a word has to not appear in order to get off the blacklist 
+# 	(the higher, the more words end up on the black list
+
 
 trendingwords(30, 5, 2)
