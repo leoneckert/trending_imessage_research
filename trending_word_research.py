@@ -130,7 +130,7 @@ def trendingwords(num_days, num_words, blacklist_limit):
 #	if it's 0, then the blacklist will be empty)
 
 
-trendingwords(2, 5, 150)
+trendingwords(30, 5, 29)
 
 
 
